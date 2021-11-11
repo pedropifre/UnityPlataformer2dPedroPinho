@@ -20,7 +20,6 @@ public class Player : MonoBehaviour
     public Ease ease = Ease.OutBack;
 
     private float _curentSpeed;
-    private bool _isRunning = false;
 
     public void Update()
     {
@@ -75,5 +74,6 @@ public class Player : MonoBehaviour
     {
         myRigidBody.transform.DOScaleY(jumpScaleY, animationDuration).SetLoops(2,LoopType.Yoyo).SetEase(ease);
         myRigidBody.transform.DOScaleX(jumpScaleX, animationDuration).SetLoops(2,LoopType.Yoyo).SetEase(ease);
+        //fazer a animação de queda com a função do DoTween para esperar a anterior acabar
     }
 }
