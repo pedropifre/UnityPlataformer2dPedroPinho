@@ -19,7 +19,14 @@ public class Player : MonoBehaviour
     public float animationDuration = 0.5f;
     public Ease ease = Ease.OutBack;
 
+
+    [Header("Player Animation")]
+    public string boolRun = "Run";
+    public Animator animator;
+    public float playerSwypeDuration = .1f;
+
     private float _curentSpeed;
+
 
     public void Update()
     {
@@ -31,18 +38,39 @@ public class Player : MonoBehaviour
     {
         //verificar corrida
         if (Input.GetKey(KeyCode.LeftShift))
+        {
             _curentSpeed = speedRun;
+            animator.speed = 2;
+        }
         else
+        {
             _curentSpeed = speed;
+            animator.speed = 1;
+        }
+            
 
         //movimento
         if (Input.GetKey(KeyCode.LeftArrow))
         {
             myRigidBody.velocity = new Vector2(-_curentSpeed, myRigidBody.velocity.y);
+            if(myRigidBody.transform.localScale.x != -1)
+            {
+                myRigidBody.transform.DOScaleX(-1, playerSwypeDuration);
+            }
+            animator.SetBool(boolRun, true);
         }
         else if (Input.GetKey(KeyCode.RightArrow))
         {
             myRigidBody.velocity = new Vector2(_curentSpeed, myRigidBody.velocity.y);
+            if (myRigidBody.transform.localScale.x != 1)
+            {
+                myRigidBody.transform.DOScaleX(1, playerSwypeDuration);
+            }
+            animator.SetBool(boolRun, true);
+        }
+        else
+        {
+            animator.SetBool(boolRun, false);
         }
 
         //eliminar fricção
