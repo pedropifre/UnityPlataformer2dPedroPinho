@@ -6,6 +6,7 @@ using DG.Tweening;
 public class Player : MonoBehaviour
 {
     public Rigidbody2D myRigidBody;
+    public HealthBase healthBase;
 
     [Header("Speed setup")]
     public Vector2 friction = new Vector2(.1f,0);   
@@ -22,12 +23,27 @@ public class Player : MonoBehaviour
 
     [Header("Player Animation")]
     public string boolRun = "Run";
+    public string triggerDeath = "Death";
     public Animator animator;
     public float playerSwypeDuration = .1f;
 
     private float _curentSpeed;
 
 
+    private void Awake()
+    {
+        if(healthBase!=null)
+        {
+            healthBase.onKill += OnPlayerKill;
+        }
+    }
+
+    private void OnPlayerKill()
+    {
+        healthBase.onKill -= OnPlayerKill;
+
+        animator.SetTrigger(triggerDeath);
+    }
     public void Update()
     {
         HandleMoviment();
@@ -103,5 +119,10 @@ public class Player : MonoBehaviour
         myRigidBody.transform.DOScaleY(jumpScaleY, animationDuration).SetLoops(2,LoopType.Yoyo).SetEase(ease);
         myRigidBody.transform.DOScaleX(jumpScaleX, animationDuration).SetLoops(2,LoopType.Yoyo).SetEase(ease);
         //fazer a animação de queda com a função do DoTween para esperar a anterior acabar
+    }
+
+    public void DestroyMe()
+    {
+        Destroy(gameObject);
     }
 }
