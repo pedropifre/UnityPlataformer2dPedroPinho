@@ -28,7 +28,7 @@ public class Player : MonoBehaviour
     public float playerSwypeDuration = .1f;
 
     private float _curentSpeed;
-
+    private bool canJump = false;
 
     private void Awake()
     {
@@ -103,8 +103,9 @@ public class Player : MonoBehaviour
 
     private void HandleJump()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && canJump == true)
         {
+            canJump = false;
             myRigidBody.velocity = Vector2.up * forceJump;
             myRigidBody.transform.localScale = Vector2.one;
 
@@ -113,7 +114,13 @@ public class Player : MonoBehaviour
             HandleScaleJump();
         }
     }
-
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Ground")
+        {
+            canJump = true;
+        }
+    }
     private void HandleScaleJump()
     {
         myRigidBody.transform.DOScaleY(jumpScaleY, animationDuration).SetLoops(2,LoopType.Yoyo).SetEase(ease);
