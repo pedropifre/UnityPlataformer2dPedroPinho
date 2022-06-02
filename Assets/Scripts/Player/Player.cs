@@ -8,27 +8,15 @@ public class Player : MonoBehaviour
     public Rigidbody2D myRigidBody;
     public HealthBase healthBase;
 
-    [Header("Speed setup")]
-    public Vector2 friction = new Vector2(.1f,0);   
-    public float speed = 7;
-    public float speedRun = 12;
-    public float forceJump = 5;
+    [Header("Setup")]
+    public SOPlayer soPlayerSetup;
 
-    [Header("Aniamtion setup")]
-    public float jumpScaleY = 1.5f;
-    public float jumpScaleX = 0.7f;
-    public float animationDuration = 0.5f;
-    public Ease ease = Ease.OutBack;
-
-
-    [Header("Player Animation")]
-    public string boolRun = "Run";
-    public string triggerDeath = "Death";
-    public Animator animator;
-    public float playerSwypeDuration = .1f;
+    //public Animator animator;
 
     private float _curentSpeed;
     private bool canJump = false;
+
+    private Animator _currentPlayer;
 
     private void Awake()
     {
@@ -36,13 +24,16 @@ public class Player : MonoBehaviour
         {
             healthBase.onKill += OnPlayerKill;
         }
+
+        _currentPlayer = Instantiate(soPlayerSetup.player, transform);
+        _currentPlayer.GetComponent<PlayerDestroyerHelper>().player = GameObject.FindObjectOfType<Player>();
     }
 
     private void OnPlayerKill()
     {
         healthBase.onKill -= OnPlayerKill;
 
-        animator.SetTrigger(triggerDeath);
+        _currentPlayer.SetTrigger(soPlayerSetup.triggerDeath);
     }
     public void Update()
     {
@@ -55,13 +46,13 @@ public class Player : MonoBehaviour
         //verificar corrida
         if (Input.GetKey(KeyCode.LeftShift))
         {
-            _curentSpeed = speedRun;
-            animator.speed = 2;
+            _curentSpeed = soPlayerSetup.speedRun;
+            _currentPlayer.speed = 2;
         }
         else
         {
-            _curentSpeed = speed;
-            animator.speed = 1;
+            _curentSpeed = soPlayerSetup.speed;
+            _currentPlayer.speed = 1;
         }
             
 
@@ -71,33 +62,33 @@ public class Player : MonoBehaviour
             myRigidBody.velocity = new Vector2(-_curentSpeed, myRigidBody.velocity.y);
             if(myRigidBody.transform.localScale.x != -1)
             {
-                myRigidBody.transform.DOScaleX(-1, playerSwypeDuration);
+                myRigidBody.transform.DOScaleX(-1, soPlayerSetup.playerSwypeDuration);
             }
-            animator.SetBool(boolRun, true);
+            _currentPlayer.SetBool(soPlayerSetup.boolRun, true);
         }
         else if (Input.GetKey(KeyCode.RightArrow))
         {
             myRigidBody.velocity = new Vector2(_curentSpeed, myRigidBody.velocity.y);
             if (myRigidBody.transform.localScale.x != 1)
             {
-                myRigidBody.transform.DOScaleX(1, playerSwypeDuration);
+                myRigidBody.transform.DOScaleX(1, soPlayerSetup.playerSwypeDuration);
             }
-            animator.SetBool(boolRun, true);
+            _currentPlayer.SetBool(soPlayerSetup.boolRun, true);
         }
         else
         {
-            animator.SetBool(boolRun, false);
+            _currentPlayer.SetBool(soPlayerSetup.boolRun, false);
         }
 
         //eliminar fricção
         if(myRigidBody.velocity.x > 0)
         {
-            myRigidBody.velocity -= friction; 
+            myRigidBody.velocity -= soPlayerSetup.friction; 
         }
 
         if (myRigidBody.velocity.x < 0)
         {
-            myRigidBody.velocity += friction;
+            myRigidBody.velocity += soPlayerSetup.friction;
         }
     }
 
@@ -106,7 +97,7 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && canJump == true)
         {
             canJump = false;
-            myRigidBody.velocity = Vector2.up * forceJump;
+            myRigidBody.velocity = Vector2.up * soPlayerSetup.forceJump;
             myRigidBody.transform.localScale = Vector2.one;
 
             DOTween.Kill(myRigidBody.transform);
@@ -123,8 +114,8 @@ public class Player : MonoBehaviour
     }
     private void HandleScaleJump()
     {
-        myRigidBody.transform.DOScaleY(jumpScaleY, animationDuration).SetLoops(2,LoopType.Yoyo).SetEase(ease);
-        myRigidBody.transform.DOScaleX(jumpScaleX, animationDuration).SetLoops(2,LoopType.Yoyo).SetEase(ease);
+        myRigidBody.transform.DOScaleY(soPlayerSetup.jumpScaleY, soPlayerSetup.animationDuration).SetLoops(2,LoopType.Yoyo).SetEase(soPlayerSetup.ease);
+        myRigidBody.transform.DOScaleX(soPlayerSetup.jumpScaleX, soPlayerSetup.animationDuration).SetLoops(2,LoopType.Yoyo).SetEase(soPlayerSetup.ease);
         //fazer a animação de queda com a função do DoTween para esperar a anterior acabar
     }
 
