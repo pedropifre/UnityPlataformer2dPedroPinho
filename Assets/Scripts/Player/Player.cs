@@ -15,8 +15,12 @@ public class Player : MonoBehaviour
 
     private float _curentSpeed;
     private bool canJump = false;
+    private bool canRun = true;
 
     private Animator _currentPlayer;
+
+    [Header("Run Particle")]
+    public ParticleSystem particleRun;
 
     private void Awake()
     {
@@ -57,6 +61,7 @@ public class Player : MonoBehaviour
             
 
         //movimento
+        
         if (Input.GetKey(KeyCode.LeftArrow))
         {
             myRigidBody.velocity = new Vector2(-_curentSpeed, myRigidBody.velocity.y);
@@ -97,21 +102,40 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && canJump == true)
         {
             canJump = false;
+            particleRun.gameObject.SetActive(false);
             myRigidBody.velocity = Vector2.up * soPlayerSetup.forceJump;
             myRigidBody.transform.localScale = Vector2.one;
 
             DOTween.Kill(myRigidBody.transform);
 
             HandleScaleJump();
+            PlayJumpVFX();
         }
+    }
+
+    private void PlayJumpVFX()
+    {
+        VFXManager.Instance.PlayVFXByType(VFXManager.VFXType.JUMP, transform.position);
+        //if (particlePulo != null) particlePulo.Play();
+    }
+    private void PlayRunVFX()
+    {
+        particleRun.gameObject.SetActive(true);
     }
     private void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Ground")
         {
             canJump = true;
+           
         }
+        
     }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        PlayRunVFX();
+    }
+
     private void HandleScaleJump()
     {
         myRigidBody.transform.DOScaleY(soPlayerSetup.jumpScaleY, soPlayerSetup.animationDuration).SetLoops(2,LoopType.Yoyo).SetEase(soPlayerSetup.ease);
@@ -120,7 +144,9 @@ public class Player : MonoBehaviour
     }
 
     public void DestroyMe()
-    {
+    { 
         Destroy(gameObject);
     }
+
+
 }
