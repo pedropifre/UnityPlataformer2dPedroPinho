@@ -28,5 +28,9 @@ public class ProjectileBase : MonoBehaviour
             enemy.Damage(damageAmount);
             Destroy(gameObject);
         }
+        else if (collision.gameObject.tag == "Player")
+        {
+            Physics2D.IgnoreCollision(collision.collider, gameObject.GetComponent<Collider2D>());
+        }
     }
 }
