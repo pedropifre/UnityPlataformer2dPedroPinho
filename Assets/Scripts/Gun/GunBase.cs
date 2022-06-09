@@ -14,6 +14,11 @@ public class GunBase : MonoBehaviour
 
 
     // Update is called once per frame
+    
+    private void Awake() 
+    {
+        playerSideReference = GameObject.FindObjectOfType<Player>().transform;    
+    }
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.S))
