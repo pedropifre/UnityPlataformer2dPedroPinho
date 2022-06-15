@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class ItemCollactableBase : MonoBehaviour
 {
+
+    [Header("Sounds")]
+    public AudioSource audioSource;
+
     public string compareTag = "Player";
     public float timeToHide=3;
     public GameObject graphicItem;
@@ -36,6 +40,7 @@ public class ItemCollactableBase : MonoBehaviour
     {
         
         VFXManager.Instance.PlayVFXByType(VFXManager.VFXType.COIN, transform.position);
+        if (audioSource != null) audioSource.Play();
         
     }
     
