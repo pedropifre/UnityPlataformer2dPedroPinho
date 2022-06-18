@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class GunBase : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class GunBase : MonoBehaviour
     public Transform playerSideReference;
 
     private Coroutine _currentCoroutine;
+    public AudioRandomPlayClips randomShoot;
+
 
 
     // Update is called once per frame
@@ -43,6 +46,7 @@ public class GunBase : MonoBehaviour
 
     public void Shoot()
     {
+        if(randomShoot!=null)randomShoot.PlayRandom();
         var projectile = Instantiate(prefabProjectile);
         projectile.transform.position = positionToShoot.position;
         projectile.side = playerSideReference.transform.localScale.x;

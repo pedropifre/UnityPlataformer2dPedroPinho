@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class EnemyBase : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class EnemyBase : MonoBehaviour
 
     public HealthBase healthBase;
     public float timeToDestroy = 1f;
+    public AudioSource audioSource;
+    
 
     private void Awake()
     {
@@ -26,11 +29,12 @@ public class EnemyBase : MonoBehaviour
         healthBase.onKill -= OnEnemyKill;
         PlayDeathAnimation();
         Destroy(gameObject,timeToDestroy);
+        if(audioSource!=null)audioSource.Play();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log(collision.transform.name);
+        
         var health = collision.gameObject.GetComponent<HealthBase>();
 
         if(health != null)

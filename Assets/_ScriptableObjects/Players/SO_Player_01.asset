@@ -23,4 +23,6 @@ MonoBehaviour:
   ease: 27
   boolRun: Run
   triggerDeath: Death
+  triggerLive: Live
   playerSwypeDuration: 0.4
+  life: 3

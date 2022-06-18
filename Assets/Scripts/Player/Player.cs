@@ -7,9 +7,12 @@ public class Player : MonoBehaviour
 {
     public Rigidbody2D myRigidBody;
     public HealthBase healthBase;
+    public GameObject spawnPoint;
+    public GameObject telaFinal;
 
     [Header("Setup")]
     public SOPlayer soPlayerSetup;
+    public SOInt lifeText;
 
     //public Animator animator;
 
@@ -24,6 +27,10 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
+        soPlayerSetup.life = 3;
+        lifeText.value = soPlayerSetup.life;
+        telaFinal.SetActive(false);
+
         if(healthBase!=null)
         {
             healthBase.onKill += OnPlayerKill;
@@ -31,14 +38,21 @@ public class Player : MonoBehaviour
 
         _currentPlayer = Instantiate(soPlayerSetup.player, transform);
         _currentPlayer.GetComponent<PlayerDestroyerHelper>().player = GameObject.FindObjectOfType<Player>();
+
     }
+
+    
 
     private void OnPlayerKill()
     {
         healthBase.onKill -= OnPlayerKill;
-
+        
         _currentPlayer.SetTrigger(soPlayerSetup.triggerDeath);
+        
     }
+
+
+
     public void Update()
     {
         HandleMoviment();
@@ -85,7 +99,7 @@ public class Player : MonoBehaviour
             _currentPlayer.SetBool(soPlayerSetup.boolRun, false);
         }
 
-        //eliminar fricção
+        //eliminar fricï¿½ï¿½o
         if(myRigidBody.velocity.x > 0)
         {
             myRigidBody.velocity -= soPlayerSetup.friction; 
@@ -122,6 +136,10 @@ public class Player : MonoBehaviour
     {
         particleRun.gameObject.SetActive(true);
     }
+    private void PlayRespawnVFX()
+    {
+        VFXManager.Instance.PlayVFXByType(VFXManager.VFXType.RESPAWN, transform.position);
+    }
     private void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Ground")
@@ -140,12 +158,35 @@ public class Player : MonoBehaviour
     {
         myRigidBody.transform.DOScaleY(soPlayerSetup.jumpScaleY, soPlayerSetup.animationDuration).SetLoops(2,LoopType.Yoyo).SetEase(soPlayerSetup.ease);
         myRigidBody.transform.DOScaleX(soPlayerSetup.jumpScaleX, soPlayerSetup.animationDuration).SetLoops(2,LoopType.Yoyo).SetEase(soPlayerSetup.ease);
-        //fazer a animação de queda com a função do DoTween para esperar a anterior acabar
+        //fazer a animaï¿½ï¿½o de queda com a funï¿½ï¿½o do DoTween para esperar a anterior acabar
     }
-
+    public void SpawnPlayer()
+    {
+        gameObject.transform.position = spawnPoint.transform.position;
+        _currentPlayer.SetTrigger(soPlayerSetup.triggerLive);
+        PlayRespawnVFX();
+        
+       
+    }
     public void DestroyMe()
     { 
-        Destroy(gameObject);
+        if(soPlayerSetup.life==1)
+        {
+            Destroy(gameObject);
+            telaFinal.SetActive(true);
+
+        }
+        else
+        {   
+            Invoke("SpawnPlayer",1.6f);
+            healthBase._isDead = false;
+            healthBase._currentLife = 10; 
+            healthBase.onKill += OnPlayerKill;
+            soPlayerSetup.life--;
+            lifeText.value = soPlayerSetup.life;
+           
+        }
+       
     }
 
 

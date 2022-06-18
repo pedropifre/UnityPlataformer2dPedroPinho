@@ -12,8 +12,8 @@ public class HealthBase : MonoBehaviour
     public bool destroyOnKill = false;
     public float delayToKill = 3f;
 
-    private int _currentLife;
-    private bool _isDead = false;
+    public int _currentLife;
+    public bool _isDead = false;
 
     public FlashCollor flashColor;
 

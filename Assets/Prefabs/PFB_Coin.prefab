@@ -261,6 +261,7 @@ MonoBehaviour:
   compareTag: Player
   timeToHide: 3
   graphicItem: {fileID: 3341570099505354064}
+  collider: {fileID: 2012537338227003939}
 --- !u!58 &2012537338227003939
 CircleCollider2D:
   m_ObjectHideFlags: 0
