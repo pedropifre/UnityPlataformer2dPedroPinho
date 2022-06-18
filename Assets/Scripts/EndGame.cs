@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class EndGame : MonoBehaviour
 {
-    public string tagToCompare = "Player";
     public GameObject endGame;
+    [Header("Setup")]
+    public SOPlayer soPlayerSetup;
 
-    private void OnTriggerEnter2D(Collider2D other) 
+   
+    public void Update() 
     {
-        if(other.transform.CompareTag(tagToCompare))
+        if(soPlayerSetup.enemiesKilled == 3)
         {
             CallEndGame();  
         }

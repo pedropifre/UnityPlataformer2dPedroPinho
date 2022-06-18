@@ -28,6 +28,7 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         soPlayerSetup.life = 3;
+        soPlayerSetup.enemiesKilled = 0;
         lifeText.value = soPlayerSetup.life;
         telaFinal.SetActive(false);
 

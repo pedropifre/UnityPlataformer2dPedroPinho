@@ -15,6 +15,9 @@ public class EnemyBase : MonoBehaviour
     public float timeToDestroy = 1f;
     public AudioSource audioSource;
     
+    [Header("Setup")]
+    public SOPlayer soPlayerSetup;
+    
 
     private void Awake()
     {
@@ -29,6 +32,7 @@ public class EnemyBase : MonoBehaviour
         healthBase.onKill -= OnEnemyKill;
         PlayDeathAnimation();
         Destroy(gameObject,timeToDestroy);
+        soPlayerSetup.enemiesKilled +=1;
         if(audioSource!=null)audioSource.Play();
     }
 

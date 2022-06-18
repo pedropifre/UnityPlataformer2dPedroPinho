@@ -28,4 +28,5 @@ public class SOPlayer : ScriptableObject
 
     [Header("Life")]
     public int life = 3;
+    public int enemiesKilled = 0;
 }

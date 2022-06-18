@@ -41,6 +41,7 @@ public class GunBase : MonoBehaviour
         {
             Shoot();
             yield return new WaitForSeconds(timeBetweenShot);
+            Debug.Log("shoot");
         }
     }
 
