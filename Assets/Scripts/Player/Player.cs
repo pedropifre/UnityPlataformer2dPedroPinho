@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
     private bool canRun = true;
 
     private Animator _currentPlayer;
+    public AudioRandomPlayClips randomShoot;
 
     [Header("Run Particle")]
     public ParticleSystem particleRun;
@@ -116,6 +117,7 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && canJump == true)
         {
+            if (randomShoot != null) randomShoot.PlayRandom();
             canJump = false;
             particleRun.gameObject.SetActive(false);
             myRigidBody.velocity = Vector2.up * soPlayerSetup.forceJump;
@@ -131,6 +133,7 @@ public class Player : MonoBehaviour
     private void PlayJumpVFX()
     {
         VFXManager.Instance.PlayVFXByType(VFXManager.VFXType.JUMP, transform.position);
+        
         //if (particlePulo != null) particlePulo.Play();
     }
     private void PlayRunVFX()
